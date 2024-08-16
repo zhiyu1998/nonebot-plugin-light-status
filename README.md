@@ -43,4 +43,4 @@ Mac：
 
 ## 效果图
 
-[status.webp](./images/status.webp)
+![status.webp](./images/status.webp)
