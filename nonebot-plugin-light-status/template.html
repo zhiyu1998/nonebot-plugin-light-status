@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Info</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            /*background-image: url('{{cur_path}}images/bg.jpg');*/
+            background-size: cover; /* 使背景图片覆盖整个页面 */
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em; /* 调整字体大小以匹配图标大小 */
+            text-align: center;
+        }
+
+        .status-icon {
+            width: 1em; /* 图标大小与 h1 的字体大小匹配 */
+            height: 1em; /* 与字体大小相同 */
+            margin-right: 10px; /* 添加间距，使图标和文字不紧贴 */
+        }
+
+        .bot-info {
+            display: flex;
+            align-items: flex-start; /* 内容顶部对齐 */
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar {
+            flex: 0 0 100px; /* 固定头像宽度 */
+            margin-right: 20px;
+        }
+
+        .avatar-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .bot-details {
+            flex: 1;
+            margin-right: 20px; /* 在机器人信息和系统信息之间留出间距 */
+        }
+
+        .bot-details h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .bot-details p {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 1em;
+        }
+
+        .bot-details p strong {
+            color: #333;
+        }
+
+        .system-details {
+            flex: 1;
+        }
+
+        .system-details p {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 1em;
+        }
+
+        .system-details ul {
+            margin: 0;
+            padding: 10px;
+            list-style: none;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .system-details ul li {
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
+
+
+        .info, .latency-card {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8); /* 半透明背景 */
+            border-radius: 35px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .circle-container {
+            display: flex; /* 横向排列 */
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .circle {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto; /* 居中 */
+            position: relative;
+        }
+
+        .circle svg {
+            transform: rotate(-90deg);
+        }
+
+        .circle .background {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 10;
+        }
+
+        .circle .foreground {
+            fill: none;
+            stroke: #6482AD;
+            stroke-width: 10;
+            stroke-dasharray: 314; /* Circle circumference */
+            stroke-dashoffset: 0;
+        }
+
+        .circle span {
+            position: absolute;
+            top: 35px;
+            left: 25px;
+            font-size: 1.1em;
+        }
+
+        .system-info, .latency-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .system-info .item, .latency-info .item {
+            display: flex;
+            flex-direction: column; /* 垂直排列 */
+            align-items: center; /* 居中对齐 */
+            justify-content: center; /* 居中对齐 */
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .latency-info {
+            display: flex;
+            justify-content: space-between; /* 像系统信息一样分布在两边 */
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .latency-info .item {
+            display: flex;
+            flex-direction: column; /* 保持内容在每个 item 中垂直排列 */
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .latency-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 5px; /* 图标和文字之间的间距 */
+        }
+
+    </style>
+</head>
+<body>
+<h1 class="status-header">
+    <img src="{{cur_path}}images/logo.png" alt="Icon" class="status-icon"> R-Light-Status
+</h1>
+
+<!-- 机器人信息 -->
+<div class="bot-info">
+    <div class="avatar">
+        <img src="{{avatar_url}}" alt="Bot Avatar" class="avatar-img">
+    </div>
+    <div class="bot-details">
+        <h2>{{nickname}}</h2> <!-- 昵称 -->
+        <p><strong>QQ:</strong> {{bot_id}}</p>
+        <p><strong>适配器:</strong> {{adapter_type}}</p>
+        <p><strong>收到消息:</strong> {{message_received}} 条</p>
+        <p><strong>发送消息:</strong> {{message_sent}} 条</p>
+    </div>
+
+    <!-- 系统信息区域 -->
+    <div class="system-details">
+        <p><strong>操作系统:</strong> {{os_name}}</p>
+        <p><strong>系统细节:</strong> {{os_detail}}</p>
+        <p><strong>CPU架构:</strong> {{cpu_architecture}}</p>
+        <div>
+            <ul>
+                {{top_processes}}  <!-- 这个占位符会被替换为生成的 HTML 列表项 -->
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- 系统信息卡片 -->
+<div class="info">
+    <div class="card-header">系统信息</div>
+    <div class="system-info">
+        <div class="item">
+            <div class="circle">
+                <svg width="100" height="100">
+                    <circle class="background" cx="50" cy="50" r="45"></circle>
+                    <circle class="foreground" cx="50" cy="50" r="45"
+                            style="stroke-dashoffset: {{cpu_usage_offset}};"></circle>
+                </svg>
+                <span>{{cpu_usage}}%</span>
+            </div>
+            <p><strong>CPU:</strong> {{cpu_core}} cores, {{cpu_freq}} GHz</p>
+        </div>
+        <div class="item">
+            <div class="circle">
+                <svg width="100" height="100">
+                    <circle class="background" cx="50" cy="50" r="45"></circle>
+                    <circle class="foreground" cx="50" cy="50" r="45"
+                            style="stroke-dashoffset: {{ram_usage_offset}};"></circle>
+                </svg>
+                <span>{{ram_usage}}%</span>
+            </div>
+            <p><strong>RAM:</strong> {{ram_usage}} GB / {{ram_total}} GB</p>
+        </div>
+        <div class="item">
+            <div class="circle">
+                <svg width="100" height="100">
+                    <circle class="background" cx="50" cy="50" r="45"></circle>
+                    <circle class="foreground" cx="50" cy="50" r="45"
+                            style="stroke-dashoffset: {{swap_usage_offset}};"></circle>
+                </svg>
+                <span>{{swap_usage}}%</span>
+            </div>
+            <p><strong>Swap:</strong> {{swap_usage}} GB / {{swap_total}} GB</p>
+        </div>
+        <div class="item">
+            <div class="circle">
+                <svg width="100" height="100">
+                    <circle class="background" cx="50" cy="50" r="45"></circle>
+                    <circle class="foreground" cx="50" cy="50" r="45"
+                            style="stroke-dashoffset: {{disk_usage_offset}};"></circle>
+                </svg>
+                <span>{{disk_usage}}%</span>
+            </div>
+            <p><strong>Disk:</strong> {{disk_usage}} GB / {{disk_total}} GB</p>
+        </div>
+    </div>
+</div>
+
+<!-- 延迟信息卡片 -->
+<div class="latency-card">
+    <div class="card-header">网络延时</div>
+    <div class="latency-info">
+        <div class="item">
+            <img src="{{cur_path}}images/baidu.png" alt="Baidu Icon" class="latency-icon">
+            <p><strong>Baidu 延时:</strong> {{baidu_latency}} ms</p>
+        </div>
+        <div class="item">
+            <img src="{{cur_path}}images/github.png" alt="GitHub Icon" class="latency-icon">
+            <p><strong>GitHub 延时:</strong> {{github_latency}} ms</p>
+        </div>
+        <div class="item">
+            <img src="{{cur_path}}images/twitter.png" alt="Twitter Icon" class="latency-icon">
+            <p><strong>Twitter 延时:</strong> {{twitter_latency}} ms</p>
+        </div>
+        <div class="item">
+            <img src="{{cur_path}}images/kimi.png" alt="Kimi Icon" class="latency-icon">
+            <p><strong>Kimi 延时:</strong> {{kimi_latency}} ms</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
