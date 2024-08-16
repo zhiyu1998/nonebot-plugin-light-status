@@ -43,4 +43,4 @@ Mac：
 
 ## 效果图
 
-![status.webp](./images/status.webp)
+<img src="./images/status.webp" alt="status.webp" style="zoom: 67%;" />
